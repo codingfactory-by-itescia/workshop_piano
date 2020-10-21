@@ -1,17 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import wiringpi2
+import wiringpi
 
-OUTPUT_MODE = 1
 
-TILE_ONE = 7
+OUTPUT = 1
 
-wiringpi2.wiringPiSetup()
+PIN_TO_PWM = 7
 
-# Configuration
-wiringpi2.pinMode(TILE_ONE, OUTPUT_MODE)
-wiringpi2.softPwmCreate(TILE_ONE, 0, 255)
+wiringpi.wiringPiSetupPhys()
+wiringpi.pinMode(PIN_TO_PWM,OUTPUT)
+wiringpi.softPwmCreate(PIN_TO_PWM,0,100) # Setup PWM using Pin, Initial Value and Range parameters
 
-# Writing on the raspberry
-wiringpi2.softPwmWrite(TILE_ONE, 125)
+for time in range(0,4):
+	for brightness in range(0,100): # Going from 0 to 100 will give us full off to full on
+		wiringpi.softPwmWrite(PIN_TO_PWM,brightness) # Change PWM duty cycle
+		wiringpi.delay(10) # Delay for 0.2 seconds
+	for brightness in reversed(range(0,100)):
+		wiringpi.softPwmWrite(PIN_TO_PWM,brightness)
+		wiringpi.delay(10)
