@@ -1,5 +1,7 @@
-from gpiozero import LED
+import wiringpi
 
-led = LED(7)
+wiringpi.wiringPiSetup()
 
-led.on()
+wiringpi.pinMode(7, 1)
+
+wiringpi.digitalWrite(7, 1)
