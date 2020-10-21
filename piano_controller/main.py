@@ -1,7 +1,7 @@
-import wiringpi
+import wiringpi2
 
-wiringpi.wiringPiSetup()
+wiringpi2.wiringPiSetup()
 
-wiringpi.pinMode(7, 1)
+wiringpi2.pinMode(7, 1)
 
-wiringpi.digitalWrite(7, 1)
+wiringpi2.digitalWrite(7, 1)
