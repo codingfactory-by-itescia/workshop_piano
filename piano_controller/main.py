@@ -4,7 +4,6 @@
 from tile import Tile
 from colour import Color
 
-tile = Tile([7])
+tile = Tile([7, 8, 10])
 
-for time in range(0, 4):
-    tile.run()
+tile.run()
