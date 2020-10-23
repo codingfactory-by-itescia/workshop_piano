@@ -3,6 +3,7 @@
 
 import time
 from enums.TileTypes import TileTypes
+from tile import Tile
 
 BASE_FILEPATH = "./maps"
 
@@ -10,28 +11,24 @@ class MusicMap():
     lines = []
 
     def __init__(self, filePath):
-        print("Retreiving the map content...")
         self.transformed_map = self.__readFile(filePath)
-        print("Map loaded !")
 
     def start(self, tiles):
-        for tile in tiles:
-            tile.resetState()
-            
         for index, line in enumerate(self.transformed_map):
-            for tile, tileState in enumerate(line):
-                if (tile >= len(tiles)):
-                    continue
+            for tileIndex, tileState in enumerate(line):
+                if (tileIndex >= len(tiles)):
+                    break
 
                 if tileState == TileTypes.EMPTY:
-                    tiles[tile].resetState()
+                    pass
                 elif tileState == TileTypes.SHORT:
-                    tiles[tile].run(self.tempo, False)
+                    tile = Tile(tiles[tileIndex], False, self)
+                    tile.start()
                 elif tileState == TileTypes.LONG:
-                    tiles[tile].run(self.tempo, True)
-                else:
-                    print("Invalid tile type in the map line " + str(index + 1))
-            time.sleep(float(self.tempo / 1000))
+                    tile = Tile(tiles[tileIndex], True, self)
+                    tile.start()
+            time.sleep((float(self.tempo) / 1000))
+        
 
     def __readFile(self, filePath):
         file = open(BASE_FILEPATH + filePath, "r")
