@@ -15,7 +15,7 @@ class MusicMap():
 
     def start(self, tiles):
         for index, line in enumerate(self.transformed_map):
-            for tileIndex, tileState in enumerate(line):
+            for tileIndex, tileState in enumerate(reversed(line)):
                 if (tileIndex >= len(tiles)):
                     break
 
@@ -32,7 +32,7 @@ class MusicMap():
 
     def __readFile(self, filePath):
         file = open(BASE_FILEPATH + filePath, "r")
-        self.tempo = int(file.readline())
+        self.tempo = self.__bpmToMs(int(file.readline()))
         lines = []
         for line in file:
             line = self.__transformToTileTypes(line.rstrip().split(","))
@@ -60,4 +60,6 @@ class MusicMap():
 
         return transformedLines
         
+    def __bpmToMs(self, tempo):
+        return 60000 / tempo
     
