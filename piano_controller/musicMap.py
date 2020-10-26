@@ -19,16 +19,15 @@ class MusicMap():
                 if (tileIndex >= len(tiles)):
                     break
 
-                if tileState == TileTypes.EMPTY:
-                    pass
-                elif tileState == TileTypes.SHORT:
-                    tile = Tile(tiles[tileIndex], False, self)
-                    tile.start()
+                if tileState == TileTypes.SHORT:
+                    self.__startTile(tiles[tileIndex], False)
                 elif tileState == TileTypes.LONG:
-                    tile = Tile(tiles[tileIndex], True, self)
-                    tile.start()
-            time.sleep((float(self.tempo) / 1000))
+                    self.__startTile(tiles[tileIndex], true)
+            time.sleep((float(self.tempo) / 1000)) # Freeze the state for one measure
         
+    def __startTile(self, pins, isLong):
+        tile = Tile(pins, isLong, self)
+        tile.start()
 
     def __readFile(self, filePath):
         file = open(BASE_FILEPATH + filePath, "r")
@@ -49,17 +48,7 @@ class MusicMap():
             else:
                 values[index] = TileTypes.LONG
         return values
-
-    def __transformToColumns(self, lines):
-        transformedLines = []
-        
-        for column in range(len(lines[0])):
-            transformedLines.append([])
-            for row, l in enumerate(lines):
-                transformedLines[column].append(l[column])
-
-        return transformedLines
-        
+ 
     def __bpmToMs(self, tempo):
         return 60000 / tempo
     
