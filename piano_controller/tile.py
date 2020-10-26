@@ -5,10 +5,12 @@ from threading import Thread
 import wiringpi
 
 class Tile(Thread):
-    def __init__(self, pins, isLong, fileMap): 
+    def __init__(self, pins, isLong, isFirst, isLast, fileMap): 
         Thread.__init__(self)
         self.pins = pins
         self.isLong = isLong
+        self.isFirst = isFirst
+        self.isLast = isLast
         self.map = fileMap
         self.__initPins()
 
@@ -30,23 +32,43 @@ class Tile(Thread):
             wiringpi.softPwmWrite(pin, brightness) # Red pin
             wiringpi.delay(10)
 
-    def run(self): 
-        '''Start the gradient on each leds'''
-        # delay = (float((255 * 2)) / self.map.tempo)
-        # self.__fade(self.pins[0], reversed(range(0, 255)))
-        # self.__fade(self.pins[1], range(0, 255))
+    def __writePrimaryShort(self):
+        wiringpi.softPwmWrite(self.pins[0], 255) # Primary blue
+        wiringpi.softPwmWrite(self.pins[1], 0) # Primary green
+        wiringpi.softPwmWrite(self.pins[2], 0) # Secondary green
 
+    def __writeSecondaryShort(self):
+        wiringpi.softPwmWrite(self.pins[0], 0) # Primary blue
+        wiringpi.softPwmWrite(self.pins[1], 0) # Primary green
+        wiringpi.softPwmWrite(self.pins[2], 255) # Secondary green
+
+    def run(self):
+        '''Start the gradient on each leds'''
         if self.isLong == False:
+            self.__writeSecondaryShort()
+            wiringpi.delay(self.map.tempo)
+            self.__writePrimaryShort()
+            
+            # Reset leds after a delay
+            wiringpi.delay(self.map.tempo)
             wiringpi.softPwmWrite(self.pins[0], 0) # Reset the red pin
             wiringpi.softPwmWrite(self.pins[1], 0) # Reset the green pin
-            wiringpi.softPwmWrite(self.pins[2], 255) # Turn on the blue pin
+            wiringpi.softPwmWrite(self.pins[2], 0) # Reset the blue pin
         else:
-            wiringpi.softPwmWrite(self.pins[0], 0) # Reset the red pin
-            wiringpi.softPwmWrite(self.pins[1], 120) # Reset the green pin
-            wiringpi.softPwmWrite(self.pins[2], 125) # Turn on the blue pin
+            if self.isFirst:
+                # Allume la led tampon
+                wiringpi.softPwmWrite(self.pins[2], 255) # Secondary green
+            elif self.isLast:
+                # Allume uniquement la led finale
+                wiringpi.softPwmWrite(self.pins[1], 255) # Primary green
 
-        # Reset leds after a delay
-        wiringpi.delay(self.map.tempo)
-        wiringpi.softPwmWrite(self.pins[0], 0) # Reset the red pin
-        wiringpi.softPwmWrite(self.pins[1], 0) # Reset the green pin
-        wiringpi.softPwmWrite(self.pins[2], 0) # Reset the blue pin
+                # Reset leds after a delay
+                wiringpi.delay(self.map.tempo)
+                wiringpi.softPwmWrite(self.pins[0], 0) # Reset the red pin
+                wiringpi.softPwmWrite(self.pins[1], 0) # Reset the green pin
+                wiringpi.softPwmWrite(self.pins[2], 0) # Reset the blue pin
+            else:
+                # Allume les deux leds
+                wiringpi.softPwmWrite(self.pins[1], 255) # Primary green
+                wiringpi.softPwmWrite(self.pins[2], 255) # Secondary green
+                

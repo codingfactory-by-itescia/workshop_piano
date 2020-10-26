@@ -15,18 +15,23 @@ class MusicMap():
 
     def start(self, tiles):
         for index, line in enumerate(self.transformed_map):
-            for tileIndex, tileState in enumerate(reversed(line)):
+            for tileIndex, tileState in enumerate(line):
                 if (tileIndex >= len(tiles)):
                     break
 
                 if tileState == TileTypes.SHORT:
                     self.__startTile(tiles[tileIndex], False)
                 elif tileState == TileTypes.LONG:
-                    self.__startTile(tiles[tileIndex], true)
+                    previousIndex = index - 1
+                    isFirst = self.transformed_map[previousIndex][tileIndex] != TileTypes.LONG if index - 1 >= 0 else True
+                    
+                    nextIndex = index + 1
+                    isLast = False if nextIndex <= len(tiles) else self.transformed_map[nextIndex][tileIndex] != TileTypes.LONG
+                    self.__startTile(tiles[tileIndex], True, isFirst, isLast)
             time.sleep((float(self.tempo) / 1000)) # Freeze the state for one measure
         
-    def __startTile(self, pins, isLong):
-        tile = Tile(pins, isLong, self)
+    def __startTile(self, pins, isLong, isFirst = False, isLast = False):
+        tile = Tile(pins, isLong, isFirst, isLast, self)
         tile.start()
 
     def __readFile(self, filePath):
