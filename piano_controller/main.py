@@ -19,6 +19,9 @@ def startGame(midi):
         [7, 8, 10],
         [11, 12, 13]
     ]
+
+    myMap.startSignal(keyboard)
+
     myMap.start(keyboard)
 
 if __name__ == "__main__":

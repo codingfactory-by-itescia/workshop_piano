@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import time
+import wiringpi
 from enums.TileTypes import TileTypes
+from utils import flatten
 from tile import Tile
 
 BASE_FILEPATH = "./maps"
@@ -13,6 +15,17 @@ class MusicMap():
     def __init__(self, filePath):
         self.transformed_map = self.__readFile(filePath)
 
+    def startSignal(self, tiles):
+        pins = map(lambda tilePins: tilePins[0], tiles) # Get the blue pin in each tile
+        for i in range(3):
+            for pin in pins:
+                wiringpi.pinMode(pin, 1)
+                wiringpi.digitalWrite(pin, 1)
+            wiringpi.delay(500)
+            for pin in pins:
+                wiringpi.digitalWrite(pin, 0)
+            wiringpi.delay(500)
+        
     def start(self, tiles):
         for index, line in enumerate(self.transformed_map):
             for tileIndex, tileState in enumerate(line):
