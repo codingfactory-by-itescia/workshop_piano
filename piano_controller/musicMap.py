@@ -26,7 +26,7 @@ class MusicMap():
                     isFirst = self.transformed_map[previousIndex][tileIndex] != TileTypes.LONG if index - 1 >= 0 else True
                     
                     nextIndex = index + 1
-                    isLast = False if nextIndex <= len(tiles) else self.transformed_map[nextIndex][tileIndex] != TileTypes.LONG
+                    isLast = self.transformed_map[nextIndex][tileIndex] != TileTypes.LONG if nextIndex < len(self.transformed_map) else True
                     self.__startTile(tiles[tileIndex], True, isFirst, isLast)
             time.sleep((float(self.tempo) / 1000)) # Freeze the state for one measure
         
