@@ -21,11 +21,6 @@ class Tile(Thread):
             wiringpi.pinMode(pin, 1) # Defining the pin as an output
             wiringpi.softPwmCreate(pin, 0, 255) # The pin is now a PWM pin
 
-    def resetState(self):
-        wiringpi.delay(150)
-        for pin in self.pins:
-            wiringpi.softPwmWrite(pin, 0) # Resetting the state of the pin
-
     def run(self):
         if self.isLong:
             self.__handleLongTile()
