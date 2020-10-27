@@ -6,6 +6,7 @@ import wiringpi
 import rtmidi
 
 from music.musicMap import MusicMap
+from enums.MappedMidiInput import MappedMidiInput
 
 DEBUG_MODE = True
 
@@ -34,7 +35,7 @@ if __name__ == "__main__":
         midiin.openPort(1)
         while True:
             m = midiin.getMessage(250) # some timeout in ms
-            if m and m.isNoteOn() and m.getMidiNoteName(m.getNoteNumber()) == "C1":
+            if m and m.isNoteOn() and m.getMidiNoteName(m.getNoteNumber()) == MappedMidiInput.get("P1"):
                 startGame(m)
                 if DEBUG_MODE == True:
                     break
