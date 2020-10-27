@@ -4,8 +4,7 @@
 import time
 import wiringpi
 from enums.TileTypes import TileTypes
-from utils import flatten
-from tile import Tile
+from Tile import Tile
 
 BASE_FILEPATH = "./maps"
 

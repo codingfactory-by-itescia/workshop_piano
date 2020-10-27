@@ -5,7 +5,7 @@ import multiprocessing as mp
 import wiringpi
 import rtmidi
 
-from musicMap import MusicMap
+from music.musicMap import MusicMap
 
 DEBUG_MODE = True
 
@@ -16,7 +16,11 @@ midiin = rtmidi.RtMidiIn()
 def startGame(midi):
     myMap = MusicMap("/LettreEliseStart.txt")
     keyboard = [
-        [7, 8, 10],
+        [
+            7, # Bleu
+            8, # Vert principal
+            10 # Vert secondaire
+        ],
         [11, 12, 13]
     ]
 
