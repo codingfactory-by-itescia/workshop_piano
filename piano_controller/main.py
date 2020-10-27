@@ -3,16 +3,34 @@
 
 import multiprocessing as mp
 import wiringpi
+import rtmidi
+
 from musicMap import MusicMap
-from colour import Color
+
+DEBUG_MODE = True
 
 wiringpi.wiringPiSetupPhys()
 
-myMap = MusicMap("/LettreEliseStart.txt")
+midiin = rtmidi.RtMidiIn()
 
-keyboard = [
-    [7, 8, 10],
-    [11, 12, 13]
-]
+def startGame(midi):
+    myMap = MusicMap("/LettreEliseStart.txt")
+    keyboard = [
+        [7, 8, 10],
+        [11, 12, 13]
+    ]
+    myMap.start(keyboard)
 
-myMap.start(keyboard)
+if __name__ == "__main__":
+    ports = range(midiin.getPortCount())
+    if ports:
+        midiin.openPort(1)
+        while True:
+            m = midiin.getMessage(250) # some timeout in ms
+            if m and m.isNoteOn() and m.getMidiNoteName(m.getNoteNumber()) == "C1":
+                startGame(m)
+                if DEBUG_MODE == True:
+                    break
+    else:
+        print('NO MIDI INPUT PORTS!')
+

@@ -14,7 +14,6 @@ class Tile(Thread):
         self.map = fileMap
         self.__initPins()
 
-
     def __initPins(self):
         '''Initialize the pins specified in the constructor in output mode with the softpwm mode enabled'''
         for _, pin in enumerate(self.pins):
