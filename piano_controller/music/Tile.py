@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import time
 from threading import Thread
-import wiringpi
+from board_manager import STATE_HIGH, STATE_LOW
 
 class Tile(Thread):
     def __init__(self, pins, isLong, isFirst, isLast, fileMap): 
@@ -12,14 +13,6 @@ class Tile(Thread):
         self.isFirst = isFirst
         self.isLast = isLast
         self.map = fileMap
-        self.__initPins()
-
-    def __initPins(self):
-        '''Initialize the pins specified in the constructor in output mode with the softpwm mode enabled'''
-        for _, pin in enumerate(self.pins):
-            wiringpi.pinMode(pin, 1) # Defining the pin as an output
-            # wiringpi.softPwmCreate(pin, 0, 255) # The pin is now a PWM pin
-            wiringpi.digitalWrite(pin, 1)
 
     def run(self):
         if self.isLong:
@@ -29,40 +22,41 @@ class Tile(Thread):
 
     def __handleShortTile(self):
         self.__writeSecondaryShort()
-        wiringpi.delay(self.map.tempo)
+        time.sleep(self.map.tempo / 1000)
         self.__writePrimaryShort()
         
-        self.__resetLedsAfterDelay(self.map.tempo)
+        self.__resetLedsAfterDelay(self.map.tempo / 1000)
 
     def __handleLongTile(self):
         if self.isFirst:
             # Allume la led tampon
-            wiringpi.digitalWrite(self.pins[2], 0) # Secondary green
+            self.fileMap.boardManager.write(self.pins[2], STATE_LOW) # Secondary green
         elif self.isLast:
             # Allume uniquement la led finale
-            wiringpi.digitalWrite(self.pins[0], 0) # Primary blue
-            wiringpi.digitalWrite(self.pins[1], 0) # Primary green
+            self.fileMap.boardManager.write(self.pins[0], STATE_LOW) # Primary blue
+            self.fileMap.boardManager.write(self.pins[1], STATE_LOW) # Primary green
 
             self.__resetLedsAfterDelay(self.map.tempo)
         else:
             # Allume les deux leds
-            wiringpi.digitalWrite(self.pins[0], 0) # Primary blue
-            wiringpi.digitalWrite(self.pins[1], 0) # Primary green
-            wiringpi.digitalWrite(self.pins[2], 0) # Secondary green
+            self.fileMap.boardManager.write(self.pins[0], STATE_LOW) # Primary blue
+            self.fileMap.boardManager.write(self.pins[1], STATE_LOW) # Primary green
+
+            self.fileMap.boardManager.write(self.pins[2], STATE_LOW) # Secondary green
 
     def __resetLedsAfterDelay(self, delay):
         # Reset leds after a delay
-        wiringpi.delay(self.map.tempo)
-        wiringpi.digitalWrite(self.pins[0], 1) # Reset the red pin
-        wiringpi.digitalWrite(self.pins[1], 1) # Reset the green pin
-        wiringpi.digitalWrite(self.pins[2], 1) # Reset the blue pin
+        time.sleep(self.map.tempo / 1000)
+        self.fileMap.boardManager.write(self.pins[0], STATE_HIGH) # Reset the red pin
+        self.fileMap.boardManager.write(self.pins[1], STATE_HIGH) # Reset the green pin
+        self.fileMap.boardManager.write(self.pins[2], STATE_HIGH) # Reset the blue pin
 
     def __writePrimaryShort(self):
-        wiringpi.digitalWrite(self.pins[0], 0) # Primary blue
-        wiringpi.digitalWrite(self.pins[1], 1) # Primary green
-        wiringpi.digitalWrite(self.pins[2], 1) # Secondary green
+        self.fileMap.boardManager.write(self.pins[0], STATE_LOW) # Primary blue
+        self.fileMap.boardManager.write(self.pins[1], STATE_HIGH) # Primary green
+        self.fileMap.boardManager.write(self.pins[2], STATE_HIGH) # Secondary green
 
     def __writeSecondaryShort(self):
-        wiringpi.digitalWrite(self.pins[0], 1) # Primary blue
-        wiringpi.digitalWrite(self.pins[1], 1) # Primary green
-        wiringpi.digitalWrite(self.pins[2], 0) # Secondary green
+        self.fileMap.boardManager.write(self.pins[0], STATE_HIGH) # Primary blue
+        self.fileMap.boardManager.write(self.pins[1], STATE_HIGH) # Primary green
+        self.fileMap.boardManager.write(self.pins[2], STATE_LOW) # Secondary green

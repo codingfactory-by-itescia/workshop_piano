@@ -2,28 +2,28 @@
 # -*- coding: utf-8 -*-
 
 import time
-import wiringpi
 from enums.TileTypes import TileTypes
-from Tile import Tile
+from music.Tile import Tile
+from board_manager import STATE_HIGH, STATE_LOW
 
 BASE_FILEPATH = "./maps"
 
 class MusicMap():
     lines = []
 
-    def __init__(self, filePath):
+    def __init__(self, boardManager, filePath):
         self.transformed_map = self.__readFile(filePath)
+        self.boardManager = boardManager
 
     def startSignal(self, tiles):
-        pins = map(lambda tilePins: tilePins[0], tiles) # Get the blue pin in each tile
+        pins = list(map(lambda tilePins: tilePins[0], tiles)) # Get the blue pin in each tile
         for i in range(3):
             for pin in pins:
-                wiringpi.pinMode(pin, 1)
-                wiringpi.digitalWrite(pin, 1)
-            wiringpi.delay(500)
+                self.boardManager.write(pin, STATE_LOW)
+            time.sleep(0.5)
             for pin in pins:
-                wiringpi.digitalWrite(pin, 0)
-            wiringpi.delay(500)
+                self.boardManager.write(pin, STATE_HIGH)
+            time.sleep(0.5)
         
     def start(self, tiles):
         for index, line in enumerate(self.transformed_map):
@@ -43,7 +43,7 @@ class MusicMap():
             time.sleep((float(self.tempo) / 1000)) # Freeze the state for one measure
         
     def __startTile(self, pins, isLong, isFirst = False, isLast = False):
-        tile = Tile(pins, isLong, isFirst, isLast, self)
+        tile = Tile(self.boardManager, pins, isLong, isFirst, isLast, self)
         tile.start()
 
     def __readFile(self, filePath):
