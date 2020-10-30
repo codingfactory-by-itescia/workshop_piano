@@ -41,6 +41,39 @@ network={
 
 Vous pouvez désormais mettre votre carte micro SD dans votre Raspberry Pi
 
+## Installation du projet
+Installation de Python 3 et de pip3:
+```sh
+sudo apt-get update
+sudo apt-get install python3 idle3 python3-pip
+
+# Pour utiliser python3 par défaut
+sudo update-alternatives --install /usr/bin/python python $(which python3) 2
+```
+
+Dépendences: 
+
+```sh
+sudo apt-get update
+sudo apt-get install python-smbus
+
+pip3 install \
+    rtmidi \ # Sert à récupérer l'appui des touches du clavier midi
+    adafruit-circuitpython-mcp230xx \ # Wrapper pour intéragir avec le MCP23017
+    adafruit-blinka # Pour avoir accès aux librairies board et busio
+```
+
+Clonage du projet:
+```sh
+git clone https://github.com/codingfactory-by-itescia/workshop_piano.git
+
+cd workshop_piano/piano_controller
+
+sudo chmod +x ./main.py
+
+./main.py 
+```
+
 # Setup du clavier MIDI
 
 ## Configuration de base
