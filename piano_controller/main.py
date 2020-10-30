@@ -12,11 +12,25 @@ DEBUG_MODE = True
 
 midiin = rtmidi.RtMidiIn()
 
-def startGame():
+def initializeBoard():
+    '''
+    Create a new board manager and add the MS23017 to it
+    '''
     manager = BoardManager()
+
+    # Add the component located at the 0x27 address (You can find the address with the "i2cdetect -y 1" command)
     manager.add(0x27)
 
-    myMap = MusicMap(manager, "/LettreEliseStart.txt")
+    return manager
+
+def startGame():
+    '''
+    Initialize the music map and start the game
+    '''
+    manager = initializeBoard()
+
+    myMap = MusicMap(manager, "/LettreEliseStart.txt") # Initialize the map
+
     keyboard = [
         [
             0, # Bleu
@@ -26,11 +40,14 @@ def startGame():
         # [3, 4, 5]
     ]
 
-    myMap.startSignal(keyboard)
-
-    myMap.start(keyboard)
+    myMap.startSignal(keyboard) # Notify the user that the game will start 
+ 
+    myMap.start(keyboard) # Begin the music map
 
 if __name__ == "__main__":
+    '''
+    Check for MIDI inputs and launch the game if the P1 key is pressed on the keyboard
+    '''
     ports = range(midiin.getPortCount())
     if ports:
         midiin.openPort(1)
