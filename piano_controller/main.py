@@ -14,7 +14,7 @@ wiringpi.wiringPiSetupPhys()
 
 midiin = rtmidi.RtMidiIn()
 
-def startGame(midi):
+def startGame():
     myMap = MusicMap("/LettreEliseStart.txt")
     keyboard = [
         [
@@ -30,15 +30,16 @@ def startGame(midi):
     myMap.start(keyboard)
 
 if __name__ == "__main__":
-    ports = range(midiin.getPortCount())
-    if ports:
-        midiin.openPort(1)
-        while True:
-            m = midiin.getMessage(250) # some timeout in ms
-            if m and m.isNoteOn() and m.getMidiNoteName(m.getNoteNumber()) == MappedMidiInput.get("P1"):
-                startGame(m)
-                if DEBUG_MODE == True:
-                    break
-    else:
-        print('NO MIDI INPUT PORTS!')
+    # ports = range(midiin.getPortCount())
+    # if ports:
+    #     midiin.openPort(1)
+    #     while True:
+    #         m = midiin.getMessage(250) # some timeout in ms
+    #         if m and m.isNoteOn() and m.getMidiNoteName(m.getNoteNumber()) == MappedMidiInput.get("P1"):
+    #             startGame(m)
+    #             if DEBUG_MODE == True:
+    #                 break
+    # else:
+    #     print('NO MIDI INPUT PORTS!')
+    startGame()
 
