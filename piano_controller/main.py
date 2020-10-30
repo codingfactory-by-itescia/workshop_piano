@@ -37,7 +37,7 @@ if __name__ == "__main__":
         while True:
             m = midiin.getMessage(250) # some timeout in ms
             if m and m.isNoteOn() and m.getMidiNoteName(m.getNoteNumber()) == MappedMidiInput.get("P1"):
-                startGame(m)
+                startGame()
                 if DEBUG_MODE == True:
                     break
     else:

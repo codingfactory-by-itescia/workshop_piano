@@ -43,7 +43,7 @@ class MusicMap():
             time.sleep((float(self.tempo) / 1000)) # Freeze the state for one measure
         
     def __startTile(self, pins, isLong, isFirst = False, isLast = False):
-        tile = Tile(self.boardManager, pins, isLong, isFirst, isLast, self)
+        tile = Tile(pins, isLong, isFirst, isLast, self)
         tile.start()
 
     def __readFile(self, filePath):
