@@ -63,6 +63,15 @@ pip3 install \
     adafruit-blinka # Pour avoir accès aux librairies board et busio
 ```
 
+Activation du bus I2C:
+```sh
+sudo raspi-config
+# Puis naviguez dans le menu "5 Interfacing Options">"I2C" et sélectionnez "Yes"
+
+# Redémarez la Raspberry
+sudo reboot
+```
+
 Clonage du projet:
 ```sh
 git clone https://github.com/codingfactory-by-itescia/workshop_piano.git
