@@ -2,7 +2,7 @@
 
 Voici le montage pour une LED
 
-[Montage](images/1led.png)
+![Montage](images/1led.png)
 
 # Installation
 
