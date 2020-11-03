@@ -6,8 +6,7 @@
 Télécharger [Raspberry Pi Imager](https://www.raspberrypi.org/downloads/)\
 Choisissez l'OS `Raspberry Pi OS (other) > Raspberry Pi OS Lite` ainsi que votre micro SD puis cliquez sur **Write**\
 Ouvrez votre console de commande puis naviguez à l'emplacement du système de votre Raspberry Pi:
-- Sur Mac OS: `/Volumes/boot`\
-// TODO: Ajouter les path sur les autres systèmes
+- Sur Mac OS: `/Volumes/boot`
 
 ### Setup du SSH
 
@@ -40,48 +39,6 @@ network={
 ```
 
 Vous pouvez désormais mettre votre carte micro SD dans votre Raspberry Pi
-
-## Installation du projet
-Installation de Python 3 et de pip3:
-```sh
-sudo apt-get update
-sudo apt-get install python3 idle3 python3-pip
-
-# Pour utiliser python3 par défaut
-sudo update-alternatives --install /usr/bin/python python $(which python3) 2
-```
-
-Dépendences: 
-
-```sh
-sudo apt-get update
-sudo apt-get install python-smbus
-
-pip3 install \
-    rtmidi \ # Sert à récupérer l'appui des touches du clavier midi
-    adafruit-circuitpython-mcp230xx \ # Wrapper pour intéragir avec le MCP23017
-    adafruit-blinka # Pour avoir accès aux librairies board et busio
-```
-
-Activation du bus I2C:
-```sh
-sudo raspi-config
-# Puis naviguez dans le menu "5 Interfacing Options">"I2C" et sélectionnez "Yes"
-
-# Redémarez la Raspberry
-sudo reboot
-```
-
-Clonage du projet:
-```sh
-git clone https://github.com/codingfactory-by-itescia/workshop_piano.git
-
-cd workshop_piano/piano_controller
-
-sudo chmod +x ./main.py
-
-./main.py 
-```
 
 # Setup du clavier MIDI
 
@@ -120,6 +77,48 @@ client 128: 'FLUID Synth (1037)' [type=user,pid=1037]
 Dans notre cas, nous voulons connecter notre clavier MIDI à la sortie audio de Fluid Synth, la commande à lancer sera donc:
 ```sh
 aconnect 20:0 128:0
+```
+
+## Installation du projet
+Installation de Python 3 et de pip3:
+```sh
+sudo apt-get update
+sudo apt-get install git python3 idle3 python3-pip
+
+# Pour utiliser python3 par défaut
+sudo update-alternatives --install /usr/bin/python python $(which python3) 2
+```
+
+Dépendences: 
+
+```sh
+sudo apt-get update
+sudo apt-get install python-smbus
+
+pip3 install \
+    rtmidi \ # Sert à récupérer l'appui des touches du clavier midi
+    adafruit-circuitpython-mcp230xx \ # Wrapper pour intéragir avec le MCP23017
+    adafruit-blinka # Pour avoir accès aux librairies board et busio
+```
+
+Activation du bus I2C:
+```sh
+sudo raspi-config
+# Puis naviguez dans le menu "5 Interfacing Options">"I2C" et sélectionnez "Yes"
+
+# Redémarez la Raspberry
+sudo reboot
+```
+
+Clonage du projet:
+```sh
+git clone https://github.com/codingfactory-by-itescia/workshop_piano.git
+
+cd workshop_piano/piano_controller
+
+sudo chmod +x ./main.py
+
+./main.py 
 ```
 
 # Références
