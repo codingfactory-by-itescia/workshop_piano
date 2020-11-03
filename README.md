@@ -1,5 +1,9 @@
 # Montage
 
+Voici le montage pour une LED
+
+[Montage](images/Montage d'une LED.png)
+
 # Installation
 
 ## Installation du système de la Raspberry PI
