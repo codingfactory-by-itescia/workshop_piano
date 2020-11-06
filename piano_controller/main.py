@@ -36,8 +36,9 @@ def startGame():
             0, # Bleu
             1, # Vert principal
             2 # Vert secondaire
-        ]
-        # [3, 4, 5]
+        ],
+        [3, 4, 5],
+        [6, 7, 8]
     ]
 
     myMap.startSignal(keyboard) # Notify the user that the game will start 
