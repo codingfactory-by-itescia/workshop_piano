@@ -8,7 +8,7 @@ from music.musicMap import MusicMap
 from board_manager import BoardManager
 from enums.MappedMidiInput import MappedMidiInput
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 midiin = rtmidi.RtMidiIn()
 
@@ -36,8 +36,9 @@ def startGame():
             0, # Bleu
             1, # Vert principal
             2 # Vert secondaire
-        ]
-        # [3, 4, 5]
+        ],
+        [3, 4, 5],
+        [6, 7, 8]
     ]
 
     myMap.startSignal(keyboard) # Notify the user that the game will start 

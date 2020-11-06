@@ -1,13 +1,16 @@
 # Montage
 
+Voici le montage pour une LED
+
+![Montage](images/1led.png)
+
 # Installation
 
 ## Installation du système de la Raspberry PI
 Télécharger [Raspberry Pi Imager](https://www.raspberrypi.org/downloads/)\
 Choisissez l'OS `Raspberry Pi OS (other) > Raspberry Pi OS Lite` ainsi que votre micro SD puis cliquez sur **Write**\
 Ouvrez votre console de commande puis naviguez à l'emplacement du système de votre Raspberry Pi:
-- Sur Mac OS: `/Volumes/boot`\
-// TODO: Ajouter les path sur les autres systèmes
+- Sur Mac OS: `/Volumes/boot`
 
 ### Setup du SSH
 
@@ -39,13 +42,57 @@ network={
 }
 ```
 
-Vous pouvez désormais mettre votre carte micro SD dans votre Raspberry Pi
+# Setup du clavier MIDI
+
+## Configuration de base
+
+Ajoutez la ligne suivante au fichier `/boot/config.txt`
+```
+audio_pwm_mode=2
+```
+
+Vous pouvez désormais mettre votre carte micro SD dans votre Raspberry Pi puis vous connecter en SSH à cette dernière.
+
+Installer les paquets suivants:
+```sh
+sudo apt-get install fluidsynth alsa-utils screen -y
+```
+
+Puis lancez le synthétiseur:
+```sh
+screen # Pour ouvrir un nouveau terminal virtuel
+
+# Lancez cette commande dans le screen
+fluidsynth --audio-driver=alsa --gain 5 /usr/share/sounds/sf2/FluidR3_GM.sf2
+
+# Pour vous détacher de cette session virtuelle, utilisez le raccourcis clavier "ctrl+a d"
+```
+
+## Configurer la sortie son de la Raspberry PI
+
+Brancher le clavier MIDI en USB sur la Rapsberry PI\
+Brancher l'enceinte en jack sur la Raspberry PI\
+Lancer la commande `aconnect -o`\
+Cette commande devrait vous donner ce type d'output:
+```sh
+client 14: 'Midi Through' [type=kernel]
+    0 'Midi Through Port-0'
+client 20: 'VMini' [type=kernel,card=1]
+    0 'VMini MIDI 1    '
+    1 'VMini MIDI 2    '
+client 128: 'FLUID Synth (1037)' [type=user,pid=1037]
+    0 'Synth input port (1037:0)'
+```
+Dans notre cas, nous voulons connecter notre clavier MIDI à la sortie audio de Fluid Synth, la commande à lancer sera donc:
+```sh
+aconnect 20:0 128:0
+```
 
 ## Installation du projet
 Installation de Python 3 et de pip3:
 ```sh
 sudo apt-get update
-sudo apt-get install python3 idle3 python3-pip
+sudo apt-get install git python3 idle3 python3-pip
 
 # Pour utiliser python3 par défaut
 sudo update-alternatives --install /usr/bin/python python $(which python3) 2
@@ -80,46 +127,9 @@ cd workshop_piano/piano_controller
 
 sudo chmod +x ./main.py
 
+### Note
+### Si vous voulez que le programme ne puisse s'exécuter qu'une seule fois, modifiez la constante DEBUG en lui mettant la valeur True
 ./main.py 
-```
-
-# Setup du clavier MIDI
-
-## Configuration de base
-
-Installer les paquets suivants:
-```sh
-sudo apt-get install fluidsynth alsa-utils -y
-```
-
-Ajoutez la ligne suivante au fichier `/boot/config.txt`
-```
-audio_pwm_mode=2
-```
-
-Puis lancez le synthétiseur:
-```sh
-fluidsynth --audio-driver=alsa --gain 5 /usr/share/sounds/sf2/FluidR3_GM.sf2
-```
-
-## Configurer la sortie son de la Raspberry PI
-
-Brancher le clavier MIDI en USB sur la Rapsberry PI\
-Brancher l'enceinte en jack sur la Raspberry PI\
-Lancer la commande `aconnect -o`\
-Cette commande devrait vous donner ce type d'output:
-```sh
-client 14: 'Midi Through' [type=kernel]
-    0 'Midi Through Port-0'
-client 20: 'VMini' [type=kernel,card=1]
-    0 'VMini MIDI 1    '
-    1 'VMini MIDI 2    '
-client 128: 'FLUID Synth (1037)' [type=user,pid=1037]
-    0 'Synth input port (1037:0)'
-```
-Dans notre cas, nous voulons connecter notre clavier MIDI à la sortie audio de Fluid Synth, la commande à lancer sera donc:
-```sh
-aconnect 20:0 128:0
 ```
 
 # Références
