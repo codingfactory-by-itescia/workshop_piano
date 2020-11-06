@@ -8,7 +8,7 @@ from music.musicMap import MusicMap
 from board_manager import BoardManager
 from enums.MappedMidiInput import MappedMidiInput
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 midiin = rtmidi.RtMidiIn()
 

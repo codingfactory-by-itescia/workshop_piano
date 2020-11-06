@@ -42,25 +42,30 @@ network={
 }
 ```
 
-Vous pouvez désormais mettre votre carte micro SD dans votre Raspberry Pi
-
 # Setup du clavier MIDI
 
 ## Configuration de base
-
-Installer les paquets suivants:
-```sh
-sudo apt-get install fluidsynth alsa-utils -y
-```
 
 Ajoutez la ligne suivante au fichier `/boot/config.txt`
 ```
 audio_pwm_mode=2
 ```
 
+Vous pouvez désormais mettre votre carte micro SD dans votre Raspberry Pi puis vous connecter en SSH à cette dernière.
+
+Installer les paquets suivants:
+```sh
+sudo apt-get install fluidsynth alsa-utils screen -y
+```
+
 Puis lancez le synthétiseur:
 ```sh
+screen # Pour ouvrir un nouveau terminal virtuel
+
+# Lancez cette commande dans le screen
 fluidsynth --audio-driver=alsa --gain 5 /usr/share/sounds/sf2/FluidR3_GM.sf2
+
+# Pour vous détacher de cette session virtuelle, utilisez le raccourcis clavier "ctrl+a d"
 ```
 
 ## Configurer la sortie son de la Raspberry PI
@@ -122,6 +127,8 @@ cd workshop_piano/piano_controller
 
 sudo chmod +x ./main.py
 
+### Note
+### Si vous voulez que le programme ne puisse s'exécuter qu'une seule fois, modifiez la constante DEBUG en lui mettant la valeur True
 ./main.py 
 ```
 
